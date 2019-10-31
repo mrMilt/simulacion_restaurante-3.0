@@ -6,6 +6,8 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,6 +17,7 @@ public class Mesero extends Empleado {
 
     protected ArrayList<Pedido> pedidos;
     protected boolean tomandoPedido;
+    protected ArrayList<Integer> calificaciones; 
 
     private final int MAX_PEDIDOS = 3;
 
@@ -22,13 +25,19 @@ public class Mesero extends Empleado {
 
     public Mesero(int jornadaTrabajo, int jornadaDescanso, int intervaloDescanso) {
         super(ID_AUTO++, jornadaTrabajo, jornadaDescanso, intervaloDescanso);
+        this.pedidos = new ArrayList<>();
         this.tomandoPedido = true;
+        this.calificaciones = new ArrayList<>();
     }
 
+    public void calificar(int calificacion) {
+        calificaciones.add(calificacion);
+    }
+    
     public Mesa buscarMesaDisponible(ArrayList<Mesa> mesas) {
         for (int i = 0; i < mesas.size(); i++) {
             Mesa mesa = mesas.get(i);
-            if (!mesa.estaAtendida) {
+            if (!mesa.estaDisponible && !mesa.estaAtendida) {
                 return mesa;
             }
         }
@@ -36,21 +45,30 @@ public class Mesero extends Empleado {
     }
 
     public void atenderMesa(ArrayList<Mesa> mesas, Menu menu) {
+        System.out.println("mesero " + id + " atendiendo mesas");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
+                    
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Mesero.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     tomandoPedido = true;
                     for (int i = 0; i < MAX_PEDIDOS; i++) {
-                        Mesa mesa = buscarMesaDisponible(mesas);
+                        Mesa mesa = buscarMesaDisponible(mesas);                        
                         if (mesa != null) {
-                            mesa.cambiarAtendida();
+                            System.out.println("mesero: " + id + " mesa: "+ mesa.id);
                             ArrayList<Cliente> clientes = mesa.clientesSentados;
                             ArrayList<Plato> platos = new ArrayList<>();
                             for (int j = 0; j < clientes.size(); j++) {
                                 Cliente cliente = clientes.get(j);
                                 platos.addAll(cliente.seleccionarPedido(menu));
                             }
+                            mesa.cambiarAtendida();
+                            System.out.println("pedido " + platos);
                             pedidos.add(new Pedido(mesa, platos));
                         }
                     }

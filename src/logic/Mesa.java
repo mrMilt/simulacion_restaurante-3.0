@@ -33,11 +33,11 @@ public class Mesa {
         clientesSentados.add(cliente);
     }
     
-    public void cambiarANoDisponible() {
-        estaDisponible = false;
+    public void cambiarDisponibilidad() {
+        estaDisponible = estaDisponible != true;
     }
     
     public void cambiarAtendida() {
-        estaDisponible = true;
+        estaAtendida = estaAtendida == false;
     }
 }

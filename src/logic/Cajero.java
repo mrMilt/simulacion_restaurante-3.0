@@ -5,6 +5,8 @@
  */
 package logic;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Milton
@@ -17,4 +19,17 @@ public class Cajero extends Empleado {
         super(ID_AUTO++, jornadaTrabajo, jornadaDescanso, intervaloDescanso);
     }
     
+    public void atenderClientes(ArrayList<Cliente> clientes) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true) {
+                    for (int i = 0; i < clientes.size(); i++) {
+                        Cliente cliente = clientes.get(i);
+                        clientes.remove(cliente);
+                    }
+                }
+            }
+        }).start();
+    }
 }

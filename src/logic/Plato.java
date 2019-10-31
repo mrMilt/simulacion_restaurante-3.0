@@ -5,6 +5,8 @@
  */
 package logic;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Milton
@@ -18,7 +20,8 @@ public class Plato {
     protected boolean esPrioridad;
     protected int tiempoPreparacion;
     protected boolean estaListo;
-
+    protected ArrayList<Integer> calificaciones; 
+    
     private static int ID_AUTO = 1;
 
     public Plato(String nombre, TipoPlato tipoPlato, double precio, int tiempoPreparacion) {
@@ -29,9 +32,19 @@ public class Plato {
         this.esPrioridad = false;
         this.tiempoPreparacion = tiempoPreparacion;
         this.estaListo = false;
+        this.calificaciones = new ArrayList<>();
     }
     
     public void cambiarEstado() {
         estaListo = true;
+    }
+    
+    public void calificar(int calificacion) {
+        calificaciones.add(calificacion);
+    }
+
+    @Override
+    public String toString() {
+        return "Plato{" + "id=" + id + ", nombre=" + nombre + ", precio=" + precio + '}';
     }
 }

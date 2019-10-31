@@ -25,21 +25,28 @@ public class Cocina {
     }
 
     public void agregarPlatos(ArrayList<Pedido> pedidos) {
-        pedidos.addAll(pedidos);
+        this.pedidos.addAll(pedidos);
+    }
+    
+    public void agregarCocinero(Cocinero cocinero) {
+        this.cocineros.add(cocinero);
     }
 
     public void esperarPedidos(ArrayList<Mesero> meseros) {
+        System.out.println("cocina: esperando pedidos");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
                     for (int i = 0; i < meseros.size(); i++) {
                         Mesero mesero = meseros.get(i);
+                        System.out.println("cantidad pedidos " + mesero.pedidos.size());
                         if (mesero.pedidos.size() > 0 && !mesero.tomandoPedido) {
                             agregarPlatos(mesero.pedidos);
                             mesero.pedidos.clear();
                         }
                     }
+                    System.out.println("cocina: pedidos " + pedidos);
                 }
             }
         }).start();

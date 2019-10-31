@@ -32,6 +32,7 @@ public class Cliente {
     } 
      
     public ArrayList<Plato> seleccionarPedido(Menu menu) {
+        System.out.println("cliente " + id + " seleccoinando pedido");
         ArrayList<Plato> platos = new ArrayList<>();
         ArrayList<Plato> entradas = menu.obtenerPlatosPorTipo(TipoPlato.ENTRADA);
         ArrayList<Plato> platosFuertes = menu.obtenerPlatosPorTipo(TipoPlato.PLATO_FUERTE);
@@ -51,17 +52,21 @@ public class Cliente {
         } else if (pedirUnPostre) {
             platos.add(postres.get((int) (Math.random() * postres.size())));
         }
-        
+        System.out.println("pedido " + platos);
         return platos;
     }
     
-    public void esperarPlato(Plato plato) {
+    public void esperarPlato(Mesa mesa, Plato plato, Mesero mesero) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {                    
                     if (plato.estaListo) {
                         System.out.println("consumir plato");
+                        plato.calificar((int)(Math.random() * 6));
+                        mesero.calificar((int)(Math.random() * 6));
+                        mesa.cambiarDisponibilidad();
+                        mesa.cambiarAtendida();
                     }
                 }
             }

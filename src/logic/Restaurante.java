@@ -32,25 +32,55 @@ public class Restaurante {
             mesas.add(new Mesa(5));
             System.out.println("");
         }
-    }
+    }        
 
     public void agregarMesero(int jornadaTrabajo, int jornadaDescanso, int intervaloDescanso) {
         meseros.add(new Mesero(jornadaTrabajo, jornadaDescanso, intervaloDescanso));
     }
+    
+    public void atenderMesas() {
+        for (int i = 0; i < meseros.size(); i++) {
+            Mesero mesero = meseros.get(i);
+            mesero.atenderMesa(mesas, menu);
+        }
+    }
+    
+    public void agregarPlatoAlMenu(String nombre, TipoPlato tipoPlato, double precio, int tiempoPreparacion) {
+        menu.agregarPlato(nombre, tipoPlato, precio, tiempoPreparacion);
+    }
 
+    public void esperarPedidos() {
+        cocina.esperarPedidos(meseros);
+    }
     
     public void simular() {
         ArrayList<Cliente> colaClientes = new ArrayList<>();
-        while (!colaClientes.isEmpty()) {
-            Cliente cliente = colaClientes.remove(0);
-            Mesa mesaDisponible = cliente.buscarMesaDisponible(mesas);
-            if (mesaDisponible != null) {
-                mesaDisponible.agregarClientes(cliente);
-                mesaDisponible.cambiarANoDisponible();
-                for (int i = 0; i < ((int) 1 + (Math.random() * 4)) - 1; i++) {
-                    mesaDisponible.agregarClientes(cliente);
+        for (int i = 0; i < 50; i++) {
+            colaClientes.add(new Cliente());
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("iniciando simulacion");
+                while (!colaClientes.isEmpty()) {
+                    System.out.println("clientes esperando " + colaClientes.size());
+                    Cliente cliente = colaClientes.remove(0);
+                    Mesa mesaDisponible = cliente.buscarMesaDisponible(mesas);
+                    if (mesaDisponible != null) {
+                        System.out.println("mesa disponible " + mesaDisponible.id);
+                        cliente.seleccionarPedido(menu);
+                        mesaDisponible.agregarClientes(cliente);
+                        mesaDisponible.cambiarDisponibilidad();
+                        for (int i = 0; i < ((int) (Math.random() * 4 + 1)) - 1 && !colaClientes.isEmpty(); i++) {
+                            cliente = colaClientes.remove(0);
+                            cliente.seleccionarPedido(menu);
+                            mesaDisponible.agregarClientes(cliente);
+                        }
+                        System.out.println("mesa esperando con " + mesaDisponible.clientesSentados.size() + " clientes");
+                    }
                 }
             }
-        }
+        }).start();
+
     }
 }

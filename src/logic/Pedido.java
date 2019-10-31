@@ -20,4 +20,9 @@ public class Pedido {
         this.mesa = mesa;
         this.platos = platos;
     }    
+
+    @Override
+    public String toString() {
+        return "Pedido{" + "mesa=" + mesa.id + ", platos=" + platos + '}';
+    }    
 }

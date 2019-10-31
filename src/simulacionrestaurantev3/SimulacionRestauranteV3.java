@@ -5,6 +5,9 @@
  */
 package simulacionrestaurantev3;
 
+import logic.Restaurante;
+import logic.TipoPlato;
+
 /**
  *
  * @author Milton
@@ -16,10 +19,16 @@ public class SimulacionRestauranteV3 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        for (int i = 0; i < 100; i++) {
-                    System.out.println("" + (int) (Math.random() * 2));
-
-        }
+        Restaurante  restaurante = new Restaurante();
+        restaurante.agregarMesas(14);
+        restaurante.agregarMesero(8, 10, 2);
+        restaurante.agregarMesero(8, 10, 2);
+        restaurante.agregarPlatoAlMenu("ensalada de frutas", TipoPlato.ENTRADA, 2000, 10);
+        restaurante.agregarPlatoAlMenu("postre de chocolate", TipoPlato.POSTRE, 5000, 20);
+        restaurante.agregarPlatoAlMenu("salmon a la parrilla", TipoPlato.PLATO_FUERTE, 15000, 30);
+        restaurante.atenderMesas();
+        restaurante.esperarPedidos();
+        restaurante.simular();
     }
     
 }
