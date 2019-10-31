@@ -30,6 +30,7 @@ public class Restaurante {
     public void agregarMesas(int numeroMesas) {
         for (int i = 0; i < numeroMesas; i++) {
             mesas.add(new Mesa(5));
+            System.out.println("");
         }
     }
 
