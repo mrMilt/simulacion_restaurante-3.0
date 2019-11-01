@@ -40,4 +40,8 @@ public class Mesa {
     public void cambiarAtendida() {
         estaAtendida = estaAtendida == false;
     }
+    
+    public void desocuparMesa() {
+        clientesSentados.clear();
+    }
 }

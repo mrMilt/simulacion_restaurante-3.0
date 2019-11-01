@@ -5,6 +5,7 @@
  */
 package simulacionrestaurantev3;
 
+import logic.Cocinero;
 import logic.Restaurante;
 import logic.TipoPlato;
 
@@ -23,10 +24,16 @@ public class SimulacionRestauranteV3 {
         restaurante.agregarMesas(14);
         restaurante.agregarMesero(8, 10, 2);
         restaurante.agregarMesero(8, 10, 2);
+        restaurante.agregarCocinero(8, 10, 2);
+        restaurante.agregarCocinero(8, 10, 2);
+        restaurante.agregarCajero(8, 10, 2);
         restaurante.agregarPlatoAlMenu("ensalada de frutas", TipoPlato.ENTRADA, 2000, 10);
         restaurante.agregarPlatoAlMenu("postre de chocolate", TipoPlato.POSTRE, 5000, 20);
         restaurante.agregarPlatoAlMenu("salmon a la parrilla", TipoPlato.PLATO_FUERTE, 15000, 30);
         restaurante.atenderMesas();
+        restaurante.cocinar();
+        restaurante.entregarPedidos();
+        restaurante.atenderEnCaja();
         restaurante.esperarPedidos();
         restaurante.simular();
     }

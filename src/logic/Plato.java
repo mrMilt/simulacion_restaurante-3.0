@@ -20,6 +20,7 @@ public class Plato {
     protected boolean esPrioridad;
     protected int tiempoPreparacion;
     protected boolean estaListo;
+    protected boolean estaEntregado;
     protected ArrayList<Integer> calificaciones; 
     
     private static int ID_AUTO = 1;
@@ -32,11 +33,18 @@ public class Plato {
         this.esPrioridad = false;
         this.tiempoPreparacion = tiempoPreparacion;
         this.estaListo = false;
+        this.estaEntregado = false;
         this.calificaciones = new ArrayList<>();
     }
     
     public void cambiarEstado() {
+        System.out.println("{{{{{{{{{{{{{ ");
         estaListo = true;
+    }
+    
+    public void entregarPlato() {
+        System.out.println("-----el plato se entrego");
+        estaEntregado = true;
     }
     
     public void calificar(int calificacion) {

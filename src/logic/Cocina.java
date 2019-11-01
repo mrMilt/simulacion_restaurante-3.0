@@ -11,17 +11,17 @@ import java.util.ArrayList;
  *
  * @author Milton
  */
-public class Cocina {
+public final class Cocina {
 
     private ArrayList<Cocinero> cocineros;
-    protected Conjelador conjelador;
+    protected Congelador conjelador;
 
     private ArrayList<Pedido> pedidos;
 
     public Cocina() {
         this.cocineros = new ArrayList<>();
-        this.conjelador = new Conjelador();
-        this.pedidos = new ArrayList<>();
+        this.conjelador = new Congelador();
+        this.pedidos = new ArrayList<>();        
     }
 
     public void agregarPlatos(ArrayList<Pedido> pedidos) {
@@ -32,6 +32,14 @@ public class Cocina {
         this.cocineros.add(cocinero);
     }
 
+    public void cocinar() {
+        System.out.println("+++++++++++++++++++cocinar " + cocineros.size());
+        for (int i = 0; i < cocineros.size(); i++) {
+            Cocinero cocinero = cocineros.get(i);
+            cocinero.prepararPlato(pedidos, conjelador);
+        }
+    }
+    
     public void esperarPedidos(ArrayList<Mesero> meseros) {
         System.out.println("cocina: esperando pedidos");
         new Thread(new Runnable() {
@@ -40,12 +48,12 @@ public class Cocina {
                 while (true) {
                     for (int i = 0; i < meseros.size(); i++) {
                         Mesero mesero = meseros.get(i);
-                        System.out.println("cantidad pedidos " + mesero.pedidos.size());
+                        System.out.println("cocina: cantidad pedidos " + mesero.pedidos.size());
                         if (mesero.pedidos.size() > 0 && !mesero.tomandoPedido) {
                             agregarPlatos(mesero.pedidos);
-                            mesero.pedidos.clear();
+//                            mesero.pedidos.clear();
                         }
-                    }
+                    }                    
                     System.out.println("cocina: pedidos " + pedidos);
                 }
             }

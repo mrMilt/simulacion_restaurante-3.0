@@ -65,7 +65,9 @@ public class Mesero extends Empleado {
                             ArrayList<Plato> platos = new ArrayList<>();
                             for (int j = 0; j < clientes.size(); j++) {
                                 Cliente cliente = clientes.get(j);
-                                platos.addAll(cliente.seleccionarPedido(menu));
+                                ArrayList<Plato> platosAux =  cliente.seleccionarPedido(menu);
+                                cliente.esperarPlato(mesa, platosAux, Mesero.this);
+                                platos.addAll(platosAux);
                             }
                             mesa.cambiarAtendida();
                             System.out.println("pedido " + platos);
@@ -82,13 +84,23 @@ public class Mesero extends Empleado {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true) {                    
+                while (true) {     
+                    System.out.println("***** " + pedidos);
                     for (int i = 0; i < pedidos.size(); i++) {
                         Pedido pedido = pedidos.get(i);
                         ArrayList<Plato> platos = pedido.platos;
+                        System.out.println("................... " + platos.size());
                         for (int j = 0; j < platos.size(); j++) {
                             Plato plato = platos.get(j);
+                            System.out.println("*********mesero: " + plato.nombre + "   " + plato.estaListo);
                             if (plato.estaListo) {
+                                try {
+                                    System.out.println("------------mesero:" + id +  " entregando plato");
+                                    Thread.sleep(100);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Mesero.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                plato.entregarPlato();
                                 platos.remove(plato);
                                 if (platos.isEmpty()) {
                                     pedidos.remove(pedido);

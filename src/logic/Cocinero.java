@@ -33,19 +33,29 @@ public class Cocinero extends Empleado {
         return false;
     }
 
-    public void prepararPlato(ArrayList<Pedido> pedidos, Conjelador conjelador) {
+    public void prepararPlato(ArrayList<Pedido> pedidos, Congelador congelador) {
+        System.out.println("fsdfsfd");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    while (!conjelador.estaDisponible) {
+                    System.out.println("cocinero:" + id +  " esperando conjelador");
+                    while (!congelador.estaDisponible) {
                     }
-                    Pedido pedido = pedidos.get(0);
-                    ArrayList<Plato> platos = pedido.platos;
-                    Plato plato = platos.remove(0);
-                    System.out.println("obteniendo productos");
-                    System.out.println("cocinando");
-                    plato.cambiarEstado();
+                    if (!pedidos.isEmpty()) {
+                        Pedido pedido = pedidos.get(0);
+                        System.out.println("cocinero: " + id + " pedido " + pedido);
+                        ArrayList<Plato> platos = pedido.platos;
+                        if (!platos.isEmpty()) {
+                            Plato plato = platos.remove(0);
+                             System.out.println("cocinero " + id + "  " + plato);
+                            if (!plato.estaListo) {
+                                System.out.println("obteniendo productos");
+                                System.out.println("cocinando");
+                                plato.cambiarEstado();
+                            }
+                        }
+                    }
                 }
             }
         }).start();

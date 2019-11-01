@@ -9,11 +9,11 @@ package logic;
  *
  * @author Milton
  */
-public class Conjelador {
+public class Congelador {
     
     protected boolean estaDisponible;
 
-    public Conjelador() {
+    public Congelador() {
         this.estaDisponible = true;
     }       
 }

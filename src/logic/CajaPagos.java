@@ -5,6 +5,8 @@
  */
 package logic;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Milton
@@ -12,4 +14,22 @@ package logic;
 public class CajaPagos {
     
      private Cajero cajero;
+     protected ArrayList<Cliente> colaCajero;
+
+    public CajaPagos() {
+        this.cajero = null;
+        this.colaCajero = new ArrayList<>();
+    }
+    
+    public void asignarCajero(int jornadaTrabajo, int jornadaDescanso, int intervaloDescanso) {
+        this.cajero = new Cajero(jornadaTrabajo, jornadaDescanso, intervaloDescanso);
+    }      
+    
+     public void agregarClientes(Cliente cliente) {
+         colaCajero.add(cliente);
+     }
+     
+     public void atenderClientes() {
+          cajero.atenderClientes(colaCajero);
+     }
 }

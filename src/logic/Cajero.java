@@ -24,9 +24,14 @@ public class Cajero extends Empleado {
             @Override
             public void run() {
                 while(true) {
+                    System.out.println("cajero: atendiendo clientes " + clientes);
                     for (int i = 0; i < clientes.size(); i++) {
                         Cliente cliente = clientes.get(i);
+                        System.out.println("cajero: cliente= " + cliente.getId() + "  " + cliente.estaEnMesa);
+                        if (!cliente.estaEnMesa) {
+                            System.out.println("cajero: cliente" + cliente.getId() + " atendido");
                         clientes.remove(cliente);
+                        }
                     }
                 }
             }
