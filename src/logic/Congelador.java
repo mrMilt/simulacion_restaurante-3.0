@@ -10,10 +10,18 @@ package logic;
  * @author Milton
  */
 public class Congelador {
-    
+
     protected boolean estaDisponible;
 
     public Congelador() {
         this.estaDisponible = true;
-    }       
+    }
+    
+    public void ocupar() {
+        estaDisponible = false;
+    }
+
+    public void desocupar() {
+        estaDisponible = true;
+    }
 }

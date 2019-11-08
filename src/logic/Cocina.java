@@ -33,15 +33,15 @@ public final class Cocina {
     }
 
     public void cocinar() {
-        System.out.println("+++++++++++++++++++cocinar " + cocineros.size());
+//        System.out.println("+++++++++++++++++++cocinar " + cocineros.size());
         for (int i = 0; i < cocineros.size(); i++) {
             Cocinero cocinero = cocineros.get(i);
             cocinero.prepararPlato(pedidos, conjelador);
         }
     }
     
-    public void esperarPedidos(ArrayList<Mesero> meseros) {
-        System.out.println("cocina: esperando pedidos");
+    public synchronized void esperarPedidos(ArrayList<Mesero> meseros) {
+//        System.out.println("cocina: esperando pedidos");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -51,10 +51,10 @@ public final class Cocina {
                         System.out.println("cocina: cantidad pedidos " + mesero.pedidos.size());
                         if (mesero.pedidos.size() > 0 && !mesero.tomandoPedido) {
                             agregarPlatos(mesero.pedidos);
-//                            mesero.pedidos.clear();
+                            mesero.pedidos.clear();
                         }
                     }                    
-                    System.out.println("cocina: pedidos " + pedidos);
+//                    System.out.println("cocina: pedidos " + pedidos);
                 }
             }
         }).start();

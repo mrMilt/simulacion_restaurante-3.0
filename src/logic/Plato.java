@@ -38,7 +38,7 @@ public class Plato {
     }
     
     public void cambiarEstado() {
-        System.out.println("{{{{{{{{{{{{{ ");
+//        System.out.println("{{{{{{{{{{{{{ ");
         estaListo = true;
     }
     
@@ -47,12 +47,21 @@ public class Plato {
         estaEntregado = true;
     }
     
-    public void calificar(int calificacion) {
+    public synchronized void calificar(int calificacion) {
         calificaciones.add(calificacion);
     }
 
+    public double obtenerPromedioCalificaciones() {
+        int total = 0;
+        for (int i = 0; i < calificaciones.size(); i++) {
+            Integer c = calificaciones.get(i);
+            total += c;
+        }
+        return total/calificaciones.size();
+    }
+    
     @Override
     public String toString() {
-        return "Plato{" + "id=" + id + ", nombre=" + nombre + ", precio=" + precio + '}';
+        return "Plato{" + "id=" + id + ", nombre=" + nombre + ", calf=" + calificaciones.size() + " entregado " + estaEntregado + " listo " + estaListo;
     }
 }

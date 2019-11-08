@@ -6,6 +6,8 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,30 +35,54 @@ public class Cocinero extends Empleado {
         return false;
     }
 
-    public void prepararPlato(ArrayList<Pedido> pedidos, Congelador congelador) {
-        System.out.println("fsdfsfd");
+    public synchronized void prepararPlato(ArrayList<Pedido> pedidos, Congelador congelador) {
+//        System.out.println("fsdfsfd");
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true) {
-                    System.out.println("cocinero:" + id +  " esperando conjelador");
+                long intervaloInicial = System.currentTimeMillis();
+                long intervaloFinal = 0;
+                long jornada = 0;
+                while (jornada < jornadaTrabajo) {
+//                    System.out.println("cocinero.:" + id +  " esperando conjelador");
                     while (!congelador.estaDisponible) {
+                        System.out.println("cocinero " + id + " esperando el conjelador");
                     }
+                    congelador.estaDisponible = false;
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Cocinero.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    congelador.estaDisponible = true;
                     if (!pedidos.isEmpty()) {
                         Pedido pedido = pedidos.get(0);
-                        System.out.println("cocinero: " + id + " pedido " + pedido);
+                        System.out.println("cocinero-: " + id + " pedido " + pedido);
                         ArrayList<Plato> platos = pedido.platos;
                         if (!platos.isEmpty()) {
                             Plato plato = platos.remove(0);
-                             System.out.println("cocinero " + id + "  " + plato);
+//                             System.out.println("cocinero " + id + "  " + plato);
                             if (!plato.estaListo) {
-                                System.out.println("obteniendo productos");
-                                System.out.println("cocinando");
+//                                System.out.println("obteniendo productos");
+//                                System.out.println("cocinando");
                                 plato.cambiarEstado();
                             }
                         }
                     }
+                    intervaloFinal += System.currentTimeMillis();
+                    if (((intervaloFinal - intervaloInicial) / 1000) >= intervaloDescanso * 60000) {
+                        try {
+                            // escala 1 h = 60000
+                            Thread.sleep(60000 * jornadaDescanso / 60);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Cajero.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        jornada += intervaloDescanso;
+                        intervaloInicial = System.currentTimeMillis();
+                        intervaloFinal = 0;
+                    }
                 }
+//                System.out.println("cocinero: termino jornada");
             }
         }).start();
     }

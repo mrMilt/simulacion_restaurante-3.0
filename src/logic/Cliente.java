@@ -6,6 +6,8 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,7 +24,7 @@ public class Cliente {
     public Cliente() {
         this.id = ID_AUTO++;
         this.estaEnMesa = false;
-        this.tipoPago = TipoPago.values()[(int)(Math.random() * TipoPago.values().length)];
+        this.tipoPago = TipoPago.values()[(int) (Math.random() * TipoPago.values().length)];
     }
 
     public int getId() {
@@ -32,7 +34,7 @@ public class Cliente {
     public Mesa buscarMesaDisponible(ArrayList<Mesa> mesas) {
         for (int i = 0; i < mesas.size(); i++) {
             Mesa mesa = mesas.get(i);
-            if (mesa.estaDisponible) {
+            if (mesa != null && mesa.estaDisponible) {
                 return mesa;
             }
         }
@@ -42,19 +44,19 @@ public class Cliente {
     public void cambiarEstaEnMesa() {
         estaEnMesa = estaEnMesa == false;
     }
-    
+
     public ArrayList<Plato> seleccionarPedido(Menu menu) {
-        System.out.println("cliente " + id + " seleccoinando pedido");
+//        System.out.println("cliente " + id + " seleccoinando pedido");
         ArrayList<Plato> platos = new ArrayList<>();
         ArrayList<Plato> entradas = menu.obtenerPlatosPorTipo(TipoPlato.ENTRADA);
         ArrayList<Plato> platosFuertes = menu.obtenerPlatosPorTipo(TipoPlato.PLATO_FUERTE);
         ArrayList<Plato> postres = menu.obtenerPlatosPorTipo(TipoPlato.POSTRE);
-        platos.add(platosFuertes.get((int) (Math.random() * platosFuertes.size())));
 
         boolean pedirEntrada = (int) (Math.random() * 2) == 1;
         boolean pedirUnPostre = (int) (Math.random() * 2) == 1;
         boolean pedirDosPostres = (int) (Math.random() * 2) == 1;
-
+        
+        platos.add(platosFuertes.get((int) (Math.random() * platosFuertes.size())));
         if (pedirEntrada) {
             platos.add(entradas.get((int) (Math.random() * entradas.size())));
         }
@@ -64,37 +66,72 @@ public class Cliente {
         } else if (pedirUnPostre) {
             platos.add(postres.get((int) (Math.random() * postres.size())));
         }
-        System.out.println("pedido " + platos);
+        System.out.println("cliente: pedido " + platos);
         return platos;
     }
 
-    public void esperarPlato(Mesa mesa, ArrayList<Plato> platos, Mesero mesero) {
+    public synchronized void esperarPlato(Mesa mesa, ArrayList<Plato> platos, Mesero mesero) {
+//        System.out.println("espetando -- " + ID_AUTO);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    System.out.println("cliente " + id + " esperando plato " + platos);
+//                    System.out.println("cliente " + id + " esperando plato " + platos);
                     int i = 0;
                     while (!platos.isEmpty()) {
-                        Plato plato = platos.get(i); 
-//                        System.out.println("cliente: plato  " + plato.nombre + "  " + plato.estaEntregado);
+                        Plato plato = platos.get(i);
+                        try {
+//                                                    System.out.println("cliente: plato  " + plato.nombre + "  " + plato.estaEntregado);
+                            Thread.sleep(5);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        System.out.println("cliente-- " + plato);
                         if (plato.estaEntregado) {
-                            System.out.println("*********************cliente: plato " + plato.nombre);
-                            System.out.println("consumir plato");
-                            plato.calificar((int) (Math.random() * 6));
+                            try {
+                                Thread.sleep(1500);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             platos.remove(plato);
+                            try {
+                                //                            System.out.println("*********************cliente: plato " + plato.nombre);
+//                            System.out.println("*clinete " + id + " consumir plato");
+                                Thread.sleep(5);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            plato.calificar((int) (Math.random() * 6));
                             mesero.calificar((int) (Math.random() * 6));
-                            mesa.cambiarDisponibilidad();
-                            mesa.cambiarAtendida();
+                            mesero.recibirPropina(plato.precio * 0.1);
                             cambiarEstaEnMesa();
                         }
                         if (i == platos.size()) {
                             i = 0;
                         }
                     }
-                    mesa.desocuparMesa();
+                    mesa.clientesSentados.remove(Cliente.this);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    if (mesa.clientesSentados.isEmpty()) {
+//                        mesa.cambiarDisponibilidad();
+//                        mesa.cambiarAtendida();
+                        mesa.estaDisponible = true;
+                        mesa.estaAtendida = false;
+                        Mesero.mesasPendientes.remove(mesa);
+                        mesa.desocuparMesa();
+//                                break;
+                    }
                 }
             }
         }).start();
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" + "id=" + id + '}';
     }
 }

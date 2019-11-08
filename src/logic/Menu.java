@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Menu {
     
-   private ArrayList<Plato> platos;
+   protected ArrayList<Plato> platos;
 
     public Menu() {
         this.platos = new ArrayList<>();

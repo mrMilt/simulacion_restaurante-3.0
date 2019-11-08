@@ -5,6 +5,9 @@
  */
 package simulacionrestaurantev3;
 
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import logic.Cocinero;
 import logic.Restaurante;
 import logic.TipoPlato;
@@ -20,11 +23,16 @@ public class SimulacionRestauranteV3 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        try {
+            Thread.sleep(0);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SimulacionRestauranteV3.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Restaurante  restaurante = new Restaurante();
         restaurante.agregarMesas(14);
         restaurante.agregarMesero(8, 10, 2);
         restaurante.agregarMesero(8, 10, 2);
-        restaurante.agregarCocinero(8, 10, 2);
+        restaurante.agregarCocinero(8, 20, 2);
         restaurante.agregarCocinero(8, 10, 2);
         restaurante.agregarCajero(8, 10, 2);
         restaurante.agregarPlatoAlMenu("ensalada de frutas", TipoPlato.ENTRADA, 2000, 10);
@@ -35,7 +43,9 @@ public class SimulacionRestauranteV3 {
         restaurante.entregarPedidos();
         restaurante.atenderEnCaja();
         restaurante.esperarPedidos();
+        
         restaurante.simular();
+//        restaurante.desocuparMesas();
     }
     
 }
